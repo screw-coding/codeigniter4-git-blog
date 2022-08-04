@@ -18,7 +18,7 @@ GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，�
 
 预览
 
-![screenshot](./screenshot.png)
+![screenshot](blog/screenshot.png)
 
 ## 二. 功能特点 ##
 
@@ -99,6 +99,7 @@ GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！�
 ```shell
   git clone https://github.com/screw-coding/codeigniter4-git-blog
   composer install
+  cp env .env
   php spark serve
 ```
 
