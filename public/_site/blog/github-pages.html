@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>使用GitBlog和Github Pages搭建博客|Jimersy Lee's Blog</title>
+	<meta name="keywords" content="GitBlog,Jimersy Lee's Blog">
+	<meta name="description" content="如果你没有主机，也不想使用SAE，只有Github账号，你想用GitBlog搭建自己的博客系统也是可以简单地做到的，Github pages允许你基于Github分库建立一个站点。">
+	
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,latin-ext">
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/style.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/customizer.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="alternate" type="application/rss+xml" title="Jimersy Lee's Blog" href="http://localhost:8080/feed.xml" />
+	
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?3f9957e676a9733fcd02eb9f0e5f9416";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	</head>
+
+<body class="home blog wide">
+	<div id="page" class="hfeed site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		    <header id="masthead" class="main-header" role="banner">
+<div class="container">
+	<div class="row">
+		<div class="site-branding col-md-4">
+			<h1 class="site-title"><a href="http://localhost:8080/" rel="home">Jimersy Lee's Blog</a></h1>
+				<span class="site-description">Just for fun</span>
+		</div>
+		<!-- .site-branding -->
+	</div>
+</div>
+</header>		    <div id="content">
+	<div class="quest-row site-content">
+		<div class="container">
+			<div class="row">
+				<div id="primary" class="content-area single col-md-9">
+					<div id="main" class="site-main" role="main">
+						<article class="post hentry">
+	<header class="entry-header">
+	<h1 class="post-title"><a href="http://localhost:8080/blog/github-pages.html" rel="bookmark">使用GitBlog和Github Pages搭建博客 </a></h1>
+	<div class="entry-meta">
+		<time class="post-date"><i class="fa fa-clock-o"></i>2015-07-20</time>
+				<span class="seperator">/</span>
+	    <span><i class="fa fa-user"></i> jockchou</span>
+	    	</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+	<div class="entry-content">
+		<!--
+author: jockchou
+date: 2015-07-20
+title: 使用GitBlog和Github Pages搭建博客
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 如果你没有主机，也不想使用SAE，只有Github账号，你想用GitBlog搭建自己的博客系统也是可以简单地做到的，[Github pages](https://pages.github.com/)允许你基于Github分库建立一个站点。
+-->
+<h2>创建Github Pages仓库</h2>
+<p>你首先要创建一个新的Github仓库，这个仓库的名字必须为<code>username.github.io</code>，username为你的github账户名，必须一致。具体的步骤请参照这里<a href="https://pages.github.com/">https://pages.github.com/</a>。</p>
+<h2>导出GitBlog静态网站</h2>
+<p>Github pages不支持PHP程序运行，所以需要导出静态页面，将导出的<code>_site</code>目录下的所有文件复制到上一步创建的本地仓库，把仓库同步到Github上面。这样就好了，你可以通过域名username.github.io来访问刚才同步的Github pages了。</p>
+<h2>绑定域名到Github pages</h2>
+<p>你也可以通过绑定自己的域名到Github pages，使用自己的域名来访问Github pages。在你的仓库根目录下创建一个<code>CNAME</code>文件，文件中输出你的域名，例如：</p>
+<pre><code>jockchou.com</code></pre>
+<p>同步这个CNAME文件到Github仓库。然后就是要把你的域名解析到Github pages了。如果使用的是顶级域名解析A纪录，如果是子域名解析CNAME纪录，解析的纪录值是:</p>
+<pre><code>103.245.222.133</code></pre>
+<p>这个IP可能Github官方会变，请注意修改。详细的配置方法参考<a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">这里</a>。</p>
+<p>以上配置完成后，等域名解析生效后，就可以使用自己的域名访问了。</p>
+	</div><!-- .entry-content -->	<footer class="entry-footer">
+		<ul class="post-categories">
+          
+          <li><a href="http://localhost:8080/category/GitBlog.html" rel="category">GitBlog</a></li>
+        	</ul>
+		
+		<ul class="post-tags">
+                   <li><a href="http://localhost:8080/tags/GitBlog.html" rel="tag">GitBlog</a></li>
+        	</ul>
+		
+	</footer><!-- .entry-footer --></article><!-- #post-## -->
+            			<div id="comments" class="clearfix">
+	<div id="respond" class="comment-respond">
+		<div id="disqus_thread"></div>
+		<script>
+		   var disqus_config = function () {
+		   this.page.url = location.href;
+		   this.page.identifier = '02def192e649294cc53853d815e1bfa0';
+		   };
+		(function() {
+			var d = document, s = d.createElement('script');
+			s.src = '//jimersylee.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	</div><!-- #respond -->
+</div>
+					</div>
+					<!-- #main -->
+				</div>
+				<!-- #primary -->
+				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
+	<aside class="widget widget_search sidebar-widget clearfix">
+	<h3 class="widget-title">搜索</h3>
+	<form class="search" action="http://localhost:8080/search" method="get">
+		<fieldset>
+			<div class="text">
+				<input name="keyword" id="keyword" type="text" placeholder="Search ..."/>
+				<button class="fa fa-search">Search</button>
+			</div>
+		</fieldset>
+	</form>
+</aside>
+	<aside class="widget widget_categories sidebar-widget clearfix">
+	<h3 class="widget-title">分类目录</h3>
+	<ul>
+		        <li class="cat-item"><a href="http://localhost:8080/category/GitBlog.html" >GitBlog</a></li>
+        	</ul>
+</aside>
+	<aside class="widget widget_archive sidebar-widget clearfix">
+	<h3 class="widget-title">文章归档</h3>
+	<ul>
+		<li><a href="http://localhost:8080/archive/201507.html">2015-07</a></li>
+		<li><a href="http://localhost:8080/archive/201401.html">2014-01</a></li>
+		</ul>
+</aside>	<aside class="widget widget_recent_entries sidebar-widget clearfix">
+	<h3 class="widget-title">近期文章</h3>
+	<ul>
+	    <li><a href="http://localhost:8080/blog/install.html">GitBlog安装</a></li>
+        <li><a href="http://localhost:8080/blog/struct.html">GitBlog目录结构</a></li>
+        <li><a href="http://localhost:8080/blog/config.html">GitBlog配置</a></li>
+        <li><a href="http://localhost:8080/blog/edit.html">编写GitBlog博客</a></li>
+        <li><a href="http://localhost:8080/blog/other-func.html">GitBlog评论，订阅，统计等功能</a></li>
+    	</ul>
+</aside>
+	<aside class="widget widget_tag_cloud sidebar-widget clearfix">
+	<h3 class="widget-title">标签</h3>
+	<div class="tagcloud">
+		<a href="http://localhost:8080/tags/GitBlog.html"  title="GitBlog" >GitBlog</a>
+		<a href="http://localhost:8080/tags/Blog.html"  title="Blog" >Blog</a>
+		</div>
+</aside>
+	<aside class="widget widget_text sidebar-widget clearfix">
+	<h3 class="widget-title">介绍</h3>
+	<div class="textwidget">
+		<p>“What I cannot create, I do not understand.” – Richard Feynman</p>
+	</div>
+</aside>
+</div><!-- #secondary -->
+			</div>
+			<!-- .row -->
+		</div>
+		<!-- .container -->
+	</div>
+	<!-- .quest-row -->
+</div>
+		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 copyright-text">
+                <a href="https://github.com/jimersylee">Made with Love</a>
+            </div>
+            <div class="col-md-6 social-icon-container clearfix">
+                <ul>
+                    <li>
+                        <a href="https://github.com/jimersylee">Github</a>
+                        <a href="https://resume.jimersylee.com">简历</a>
+                        <a href="https://www.jimersylee.com">个人主页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</footer>
+	</div><!-- #page -->
+	<a href="#0" class="cd-top"><i class="fa fa-angle-up"></i></a>
+
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/modernizr/modernizr.custom.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery.js?ver=1.11.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/bootstrap/js/bootstrap.min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/wow/wow.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/colorbox/jquery.colorbox-min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/js/quest.js?ver=2.3.2"></script>
+	
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/8.6/styles/default.min.css">
+<script src="//cdn.bootcss.com/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

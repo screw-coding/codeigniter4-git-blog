@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>编写GitBlog博客|Jimersy Lee's Blog</title>
+	<meta name="keywords" content="GitBlog,Jimersy Lee's Blog">
+	<meta name="description" content="一篇GitBlog就是一个markdown文件，GitBlog使用解析markdown文件为html展示在网页上。所有的博客markdown文件必须放在posts文件夹里。后缀名只可以是xx.md或者xx.markdown。">
+	
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,latin-ext">
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/style.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/customizer.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="alternate" type="application/rss+xml" title="Jimersy Lee's Blog" href="http://localhost:8080/feed.xml" />
+	
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?3f9957e676a9733fcd02eb9f0e5f9416";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	</head>
+
+<body class="home blog wide">
+	<div id="page" class="hfeed site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		    <header id="masthead" class="main-header" role="banner">
+<div class="container">
+	<div class="row">
+		<div class="site-branding col-md-4">
+			<h1 class="site-title"><a href="http://localhost:8080/" rel="home">Jimersy Lee's Blog</a></h1>
+				<span class="site-description">Just for fun</span>
+		</div>
+		<!-- .site-branding -->
+	</div>
+</div>
+</header>		    <div id="content">
+	<div class="quest-row site-content">
+		<div class="container">
+			<div class="row">
+				<div id="primary" class="content-area single col-md-9">
+					<div id="main" class="site-main" role="main">
+						<article class="post hentry">
+	<header class="entry-header">
+	<h1 class="post-title"><a href="http://localhost:8080/blog/edit.html" rel="bookmark">编写GitBlog博客 </a></h1>
+	<div class="entry-meta">
+		<time class="post-date"><i class="fa fa-clock-o"></i>2015-07-27</time>
+				<span class="seperator">/</span>
+	    <span><i class="fa fa-user"></i> jockchou</span>
+	    	</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+	<div class="entry-content">
+		<!--
+author: jockchou
+date: 2015-07-27
+title: 编写GitBlog博客
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 一篇GitBlog就是一个markdown文件，GitBlog使用解析markdown文件为html展示在网页上。所有的博客markdown文件必须放在posts文件夹里。后缀名只可以是xx.md或者xx.markdown。
+-->
+<p>一篇GitBlog就是一个markdown文件，GitBlog使用解析markdown文件为html展示在网页上。所有的博客markdown文件必须放在<code>blog</code>文件夹里。后缀名只可以是<code>xx.md</code>或者<code>xx.markdown</code>。</p>
+<h2>发表一篇新博客</h2>
+<p>在<code>blog</code>里新建文件<code>helloworld.md</code>，输入以下内容：</p>
+<pre><code>&lt;!--
+author: jockchou
+date: 2015-07-30
+title: Hello World!
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 你好！GitBlog
+--&gt;
+
+你好！GitBlog
+
+GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，没有管理后台功能，更新博客只需要添加你写好的Markdown文件即可。
+</code></pre>
+<p>文件里头部的注释用来定义博客的属性，这是一个规定的写法，必须放在文件的头部，每个属性独占一行。再次访问首页，就能看到这篇新发的博客了。如果没显示，请清除<code>writable/cache</code>文件夹下的所有缓存文件试试看。</p>
+<pre><code>&lt;!--
+这里定义博客属性
+--&gt;</code></pre>
+<p><em>注意：markdown文件须采用utf8编码</em>，如果出现乱码，请修改编码为utf8。</p>
+<h2>博客属性定义</h2>
+<p>GitBlog目前针对博客定义了以下属性：</p>
+<ul>
+<li>author: 博客作者名称  </li>
+<li>date: 博客时间，用于页面显示，通常来说你不需要填写这个字段，默认就是创建日期</li>
+<li>title: 博客标题  </li>
+<li>tags: 博客里的标签，多个用逗号或空格分隔  </li>
+<li>category: 博客分类，多个用逗号或空格分隔  </li>
+<li>status: 博客状态，<code>draft</code>表示草稿，GitBlog解析时会忽略草稿；<code>publish</code>表示发表状态，默认为publish  </li>
+<li>summary: 博客摘要信息  </li>
+</ul>
+<p>以上所有信息都是独占一行，暂不支持写在多行。</p>
+<h2>版本的新特性</h2>
+<p>Gitblog新增了两个可选属性</p>
+<ul>
+<li>images:博客的图片集，这里可以定义博客用到的图片的地址</li>
+<li>head: 作者的头像地址</li>
+</ul>
+<p>以上两个属性是可选的，主要是针对一些主题展示用的。</p>
+<p>自动提取title，summary，images属性。Gitblog一个重要的功能，如果用户没有定义头部属性，Gitblog会自动解析博客内容，从中提取属性。提取第一个H1作为title，提取所有图片作为images，自动识别摘要信息summary。也就是说你可以不手动定义这三个字段，Gitblog会自动根据上述规则识别，不过还是推荐手动填写。</p>
+<h2>markdown路径与URL对应关系</h2>
+<p>GitBlog中<code>blog</code>中的markdown文件可以放在子文件夹中。举个例子，假如你的<code>helloword.md</code>文件目录如下：</p>
+<pre><code>blog/hello/helloword.md</code></pre>
+<p>你在浏览器访问的对应地址应该是这样的：</p>
+<pre><code>http://jockchou.gitblog.cn/blog/hello/helloworld.html</code></pre>
+<p>GitBlog对<code>blog</code>中子文件夹的层级没有限制，但请尽量不要太深，一般2，3层就够了。如果你在本地编写博客，使用FTP工具上传markdown文件到<code>blog</code>目录，如果你熟悉使用Git，SVN类似工具，用它们来发表博客也是极好的。markdown文件的路径和文件名标识了博客的唯一性，改变路径或修改文件名将会导致博客的评论信息丢失。</p>
+	</div><!-- .entry-content -->	<footer class="entry-footer">
+		<ul class="post-categories">
+          
+          <li><a href="http://localhost:8080/category/GitBlog.html" rel="category">GitBlog</a></li>
+        	</ul>
+		
+		<ul class="post-tags">
+                   <li><a href="http://localhost:8080/tags/GitBlog.html" rel="tag">GitBlog</a></li>
+        	</ul>
+		
+	</footer><!-- .entry-footer --></article><!-- #post-## -->
+            			<div id="comments" class="clearfix">
+	<div id="respond" class="comment-respond">
+		<div id="disqus_thread"></div>
+		<script>
+		   var disqus_config = function () {
+		   this.page.url = location.href;
+		   this.page.identifier = '7474bc2dda2232ae537ccac26fb1d3fa';
+		   };
+		(function() {
+			var d = document, s = d.createElement('script');
+			s.src = '//jimersylee.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	</div><!-- #respond -->
+</div>
+					</div>
+					<!-- #main -->
+				</div>
+				<!-- #primary -->
+				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
+	<aside class="widget widget_search sidebar-widget clearfix">
+	<h3 class="widget-title">搜索</h3>
+	<form class="search" action="http://localhost:8080/search" method="get">
+		<fieldset>
+			<div class="text">
+				<input name="keyword" id="keyword" type="text" placeholder="Search ..."/>
+				<button class="fa fa-search">Search</button>
+			</div>
+		</fieldset>
+	</form>
+</aside>
+	<aside class="widget widget_categories sidebar-widget clearfix">
+	<h3 class="widget-title">分类目录</h3>
+	<ul>
+		        <li class="cat-item"><a href="http://localhost:8080/category/GitBlog.html" >GitBlog</a></li>
+        	</ul>
+</aside>
+	<aside class="widget widget_archive sidebar-widget clearfix">
+	<h3 class="widget-title">文章归档</h3>
+	<ul>
+		<li><a href="http://localhost:8080/archive/201507.html">2015-07</a></li>
+		<li><a href="http://localhost:8080/archive/201401.html">2014-01</a></li>
+		</ul>
+</aside>	<aside class="widget widget_recent_entries sidebar-widget clearfix">
+	<h3 class="widget-title">近期文章</h3>
+	<ul>
+	    <li><a href="http://localhost:8080/blog/install.html">GitBlog安装</a></li>
+        <li><a href="http://localhost:8080/blog/struct.html">GitBlog目录结构</a></li>
+        <li><a href="http://localhost:8080/blog/config.html">GitBlog配置</a></li>
+        <li><a href="http://localhost:8080/blog/edit.html">编写GitBlog博客</a></li>
+        <li><a href="http://localhost:8080/blog/other-func.html">GitBlog评论，订阅，统计等功能</a></li>
+    	</ul>
+</aside>
+	<aside class="widget widget_tag_cloud sidebar-widget clearfix">
+	<h3 class="widget-title">标签</h3>
+	<div class="tagcloud">
+		<a href="http://localhost:8080/tags/GitBlog.html"  title="GitBlog" >GitBlog</a>
+		<a href="http://localhost:8080/tags/Blog.html"  title="Blog" >Blog</a>
+		</div>
+</aside>
+	<aside class="widget widget_text sidebar-widget clearfix">
+	<h3 class="widget-title">介绍</h3>
+	<div class="textwidget">
+		<p>“What I cannot create, I do not understand.” – Richard Feynman</p>
+	</div>
+</aside>
+</div><!-- #secondary -->
+			</div>
+			<!-- .row -->
+		</div>
+		<!-- .container -->
+	</div>
+	<!-- .quest-row -->
+</div>
+		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 copyright-text">
+                <a href="https://github.com/jimersylee">Made with Love</a>
+            </div>
+            <div class="col-md-6 social-icon-container clearfix">
+                <ul>
+                    <li>
+                        <a href="https://github.com/jimersylee">Github</a>
+                        <a href="https://resume.jimersylee.com">简历</a>
+                        <a href="https://www.jimersylee.com">个人主页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</footer>
+	</div><!-- #page -->
+	<a href="#0" class="cd-top"><i class="fa fa-angle-up"></i></a>
+
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/modernizr/modernizr.custom.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery.js?ver=1.11.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/bootstrap/js/bootstrap.min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/wow/wow.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/colorbox/jquery.colorbox-min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/js/quest.js?ver=2.3.2"></script>
+	
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/8.6/styles/default.min.css">
+<script src="//cdn.bootcss.com/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

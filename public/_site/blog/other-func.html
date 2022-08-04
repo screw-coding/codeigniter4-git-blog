@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>GitBlog评论，订阅，统计等功能|Jimersy Lee's Blog</title>
+	<meta name="keywords" content="GitBlog,Jimersy Lee's Blog">
+	<meta name="description" content="GitBlog支持评论，订阅，百度统计相关功能，这些功能可由conf.yaml配置开启或关闭，评论采用多说评论框，统计采用百度统计。">
+	
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,latin-ext">
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/style.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/customizer.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="alternate" type="application/rss+xml" title="Jimersy Lee's Blog" href="http://localhost:8080/feed.xml" />
+	
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?3f9957e676a9733fcd02eb9f0e5f9416";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	</head>
+
+<body class="home blog wide">
+	<div id="page" class="hfeed site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		    <header id="masthead" class="main-header" role="banner">
+<div class="container">
+	<div class="row">
+		<div class="site-branding col-md-4">
+			<h1 class="site-title"><a href="http://localhost:8080/" rel="home">Jimersy Lee's Blog</a></h1>
+				<span class="site-description">Just for fun</span>
+		</div>
+		<!-- .site-branding -->
+	</div>
+</div>
+</header>		    <div id="content">
+	<div class="quest-row site-content">
+		<div class="container">
+			<div class="row">
+				<div id="primary" class="content-area single col-md-9">
+					<div id="main" class="site-main" role="main">
+						<article class="post hentry">
+	<header class="entry-header">
+	<h1 class="post-title"><a href="http://localhost:8080/blog/other-func.html" rel="bookmark">GitBlog评论，订阅，统计等功能 </a></h1>
+	<div class="entry-meta">
+		<time class="post-date"><i class="fa fa-clock-o"></i>2015-07-26</time>
+				<span class="seperator">/</span>
+	    <span><i class="fa fa-user"></i> jockchou</span>
+	    	</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+	<div class="entry-content">
+		<!--
+author: jockchou
+date: 2015-07-26
+title: GitBlog评论，订阅，统计等功能
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog支持评论，订阅，百度统计相关功能，这些功能可由conf.yaml配置开启或关闭，评论采用多说评论框，统计采用百度统计。
+-->
+<p>GitBlog支持评论，订阅，百度统计相关功能，这些功能可由<code>conf.yaml</code>配置开启或关闭，评论采用多说评论框，统计采用百度统计。</p>
+<h2>disqus评论框</h2>
+<p>GitBlog目前只支持disqus评论框，如果你希望你的博客有评论功能，你需要申请disqus账号来管理你的评论。disqus的官方地址是：<a href="https://disqus.com/">https://disqus.com/</a>。</p>
+<p>在后台创建一个site,比如说叫jimersylee然后把site的名字填入conf.yaml</p>
+<p>GitBlog中已经引入了代码，你要做的事情只是在<code>conf.yaml</code>配置文中填上你的disqus=<code>jimersylee</code>即可。例如我的博客：</p>
+<pre><code>disqus: jimersylee  //填写你的多说账号</code></pre>
+<p>多说后台提供了评论的管理功能，你可以在后台配置你的评论样式，功能，以及审核，删除评论等操作。如果你不需要评论功能，删除<code>conf.yaml</code>中的配置项即可。</p>
+<h2>百度统计</h2>
+<p>同时，对于博客的PV统计，你需要申请百度统计账号。你也不需要手动获取统计代码。只需要填写你的统计代码中的Key值就行了。例如我的百度统计代码如下：</p>
+<pre><code>&lt;script&gt;
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?732acc76ff6bd41343951a67cbfafe34";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+&lt;/script&gt;
+</code></pre>
+<p>只需要将<code>732acc76ff6bd41343951a67cbfafe34</code>配置到<code>conf.yaml</code>中即可。</p>
+<pre><code>baiduAnalytics  : 732acc76ff6bd41343951a67cbfafe34  #百度统计</code></pre>
+<h2>代码高亮</h2>
+<p>GitBlog的代码高亮功能采用<a href="https://highlightjs.org/">highlight.js</a>。它能自动识别代码中的语言类型。默认是开启代码高亮功能的。关闭此功能配置如下：</p>
+<pre><code>highlight: off</code></pre>
+<h2>数学公式</h2>
+<p>GitBlog支持<a href="https://en.wikipedia.org/wiki/LaTeX">LaTeX</a>数据公式，采用的是<a href="http://www.mathjax.org/">MathJax.js</a>。此功能默认是关闭的，开启的配置如下：</p>
+<pre><code>mathjax: on</code></pre>
+<h2>RSS订阅</h2>
+<p>GitBlog支持RSS订阅，订阅的xml文件地址是：</p>
+<pre><code>http://jockchou.gitblog.cn/feed.xml</code></pre>
+<p>请替换为你自己的域名，即网站根目录下的feed.xml文件。</p>
+	</div><!-- .entry-content -->	<footer class="entry-footer">
+		<ul class="post-categories">
+          
+          <li><a href="http://localhost:8080/category/GitBlog.html" rel="category">GitBlog</a></li>
+        	</ul>
+		
+		<ul class="post-tags">
+                   <li><a href="http://localhost:8080/tags/GitBlog.html" rel="tag">GitBlog</a></li>
+        	</ul>
+		
+	</footer><!-- .entry-footer --></article><!-- #post-## -->
+            			<div id="comments" class="clearfix">
+	<div id="respond" class="comment-respond">
+		<div id="disqus_thread"></div>
+		<script>
+		   var disqus_config = function () {
+		   this.page.url = location.href;
+		   this.page.identifier = 'df44b9512054e8cf35682a11f26271bd';
+		   };
+		(function() {
+			var d = document, s = d.createElement('script');
+			s.src = '//jimersylee.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	</div><!-- #respond -->
+</div>
+					</div>
+					<!-- #main -->
+				</div>
+				<!-- #primary -->
+				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
+	<aside class="widget widget_search sidebar-widget clearfix">
+	<h3 class="widget-title">搜索</h3>
+	<form class="search" action="http://localhost:8080/search" method="get">
+		<fieldset>
+			<div class="text">
+				<input name="keyword" id="keyword" type="text" placeholder="Search ..."/>
+				<button class="fa fa-search">Search</button>
+			</div>
+		</fieldset>
+	</form>
+</aside>
+	<aside class="widget widget_categories sidebar-widget clearfix">
+	<h3 class="widget-title">分类目录</h3>
+	<ul>
+		        <li class="cat-item"><a href="http://localhost:8080/category/GitBlog.html" >GitBlog</a></li>
+        	</ul>
+</aside>
+	<aside class="widget widget_archive sidebar-widget clearfix">
+	<h3 class="widget-title">文章归档</h3>
+	<ul>
+		<li><a href="http://localhost:8080/archive/201507.html">2015-07</a></li>
+		<li><a href="http://localhost:8080/archive/201401.html">2014-01</a></li>
+		</ul>
+</aside>	<aside class="widget widget_recent_entries sidebar-widget clearfix">
+	<h3 class="widget-title">近期文章</h3>
+	<ul>
+	    <li><a href="http://localhost:8080/blog/install.html">GitBlog安装</a></li>
+        <li><a href="http://localhost:8080/blog/struct.html">GitBlog目录结构</a></li>
+        <li><a href="http://localhost:8080/blog/config.html">GitBlog配置</a></li>
+        <li><a href="http://localhost:8080/blog/edit.html">编写GitBlog博客</a></li>
+        <li><a href="http://localhost:8080/blog/other-func.html">GitBlog评论，订阅，统计等功能</a></li>
+    	</ul>
+</aside>
+	<aside class="widget widget_tag_cloud sidebar-widget clearfix">
+	<h3 class="widget-title">标签</h3>
+	<div class="tagcloud">
+		<a href="http://localhost:8080/tags/GitBlog.html"  title="GitBlog" >GitBlog</a>
+		<a href="http://localhost:8080/tags/Blog.html"  title="Blog" >Blog</a>
+		</div>
+</aside>
+	<aside class="widget widget_text sidebar-widget clearfix">
+	<h3 class="widget-title">介绍</h3>
+	<div class="textwidget">
+		<p>“What I cannot create, I do not understand.” – Richard Feynman</p>
+	</div>
+</aside>
+</div><!-- #secondary -->
+			</div>
+			<!-- .row -->
+		</div>
+		<!-- .container -->
+	</div>
+	<!-- .quest-row -->
+</div>
+		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 copyright-text">
+                <a href="https://github.com/jimersylee">Made with Love</a>
+            </div>
+            <div class="col-md-6 social-icon-container clearfix">
+                <ul>
+                    <li>
+                        <a href="https://github.com/jimersylee">Github</a>
+                        <a href="https://resume.jimersylee.com">简历</a>
+                        <a href="https://www.jimersylee.com">个人主页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</footer>
+	</div><!-- #page -->
+	<a href="#0" class="cd-top"><i class="fa fa-angle-up"></i></a>
+
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/modernizr/modernizr.custom.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery.js?ver=1.11.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/bootstrap/js/bootstrap.min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/wow/wow.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/colorbox/jquery.colorbox-min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/js/quest.js?ver=2.3.2"></script>
+	
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/8.6/styles/default.min.css">
+<script src="//cdn.bootcss.com/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

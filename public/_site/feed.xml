@@ -1,0 +1,670 @@
+<!-- DEBUG-VIEW START 1 APPPATH/Views/feed.php -->
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Jimersy Lee's Blog</title>
+        <description>这是Jimersy Lee的个人博客</description>
+        <link>http://localhost:8080/</link>
+        <atom:link href="http://localhost:8080//feed.xml" rel="self" type="application/rss+xml" />
+        <pubDate>2022-08-04 04:08:35</pubDate>
+        <lastBuildDate>2022-08-04 04:08:35</lastBuildDate>
+        <generator>Gitblog v1.0</generator>
+                <item>
+            <title>GitBlog安装</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-30
+title: GitBlog安装
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 这是Giblog的一个简单安装教程，如果你熟悉PHP或Web开发，这对你来说一定非常简单。本教程只针对Linux+Nginx环境，对于使用Apache的用户请参考Apache配置章节。
+--&gt;
+&lt;p&gt;这是Giblog的一个简单安装教程，如果你熟悉PHP或Web开发，这对你来说一定非常简单。本教程只针对Linux+Nginx环境，对于使用Apache的用户请参考&lt;a href=&quot;http://gitblogdoc.sinaapp.com/blog/gitblog/apache.html&quot;&gt;在Apache上运行GitBlog&lt;/a&gt;。&lt;/p&gt;
+&lt;h2&gt;环境准备:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;域名&lt;/li&gt;
+&lt;li&gt;Linux主机&lt;/li&gt;
+&lt;li&gt;php + php-fpm&lt;/li&gt;
+&lt;li&gt;nginx&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;假设我的域名为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jockchou.gitblog.cn&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;Linux主机&lt;/h2&gt;
+&lt;p&gt;如果你想自己购买主机搭建Gitblog，我推荐[阿里云][1]。我不得不承认这是一个广告链接，Gitblog作为一个开源软件，需要经济的支撑，如果你不需要云主机请忽略，如果你需要，感激你通过点击下面图片链接去购买，非常感激您的支持！&lt;/p&gt;
+&lt;h2&gt;配置nginx虚拟主机&lt;/h2&gt;
+&lt;p&gt;假设我的nginx配置的网站根目录为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/data/vhosts/jockchou.gitblog.cn&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;GitBlog采用&lt;a href=&quot;http://codeigniter.org.cn/&quot;&gt;CodeIgniter&lt;/a&gt;开发，nginx可参考如下配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;server {
+        listen       80;
+        server_name  jockchou.gitblog.cn;
+        root         /data/vhosts/jockchou.gitblog.cn;
+        index        index.html index.htm index.php;
+
+        location ~ \.(jpg|png|gif|js|css|swf|flv|ico)$ {
+                 expires 12h;
+        }
+
+        location / {
+                if (!-e $request_filename) {
+                    rewrite ^(.*)$ /index.php?$1 last ;
+                    break;
+                }
+        }
+
+        location ~* ^/(doc|logs|app|sys)/ {
+                return 403;
+        }
+
+        location ~ .*\.(php|php5)?$
+        {
+                fastcgi_connect_timeout 300;
+                fastcgi_send_timeout 300;
+                fastcgi_read_timeout 300;
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在根目录下写一个&lt;code&gt;index.php&lt;/code&gt;文件&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php phpinfo();?&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;启动nginx和php-fpm，在浏览器中访问域名&lt;code&gt;http://jockchou.gitblog.cn&lt;/code&gt;正常显示phpinfo的内容表示安装环境成功了。&lt;/p&gt;
+&lt;h2&gt;下载GitBlog源码包&lt;/h2&gt;
+&lt;p&gt;到&lt;a href=&quot;https://github.com/jockchou/gitblog/releases&quot;&gt;这里&lt;/a&gt;下载最新的GitBlog源码包，下传到你的服务器，解压复制包中的所有文件到网站根目录:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/data/vhosts/jockchou.gitblog.cn&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;再访问域名，就能看到GitBlog的默认页面了。&lt;/p&gt;
+&lt;h2&gt;权限问题&lt;/h2&gt;
+&lt;p&gt;确保&lt;code&gt;posts&lt;/code&gt;拥有读权限&lt;br /&gt;
+确保&lt;code&gt;writable/cache&lt;/code&gt;和&lt;code&gt;app/logs&lt;/code&gt;目录的写权限  &lt;/p&gt;
+&lt;p&gt;假如运行php-fpm的用户名为apache：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;chown -R apache:apache ./writable/cache
+chown -R apache:apache ./app/logs&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;其他需要注意的问题&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;确保你已经安装了&lt;code&gt;mbstring&lt;/code&gt;扩展库  &lt;/li&gt;
+&lt;li&gt;确保php.ini开启了short_open_tag = On  &lt;/li&gt;
+&lt;li&gt;确保php的版本在7.4以上  &lt;/li&gt;
+&lt;/ul&gt;            </description>
+            <pubDate>2022-08-04 04:35:39</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/install.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/install.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog目录结构</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-29
+title: GitBlog目录结构
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog采用流行的PHP框架CodeIgniter开发，只是我对一些目录进行了重命名。如果你熟悉CodeIgniter框架，那你一定不会陌生。
+--&gt;
+&lt;p&gt;GitBlog采用流行的PHP框架&lt;code&gt;CodeIgniter&lt;/code&gt;开发，只是我对一些目录进行了重命名。如果你熟悉CodeIgniter框架，那你一定不会陌生。&lt;/p&gt;
+&lt;h2&gt;目录结构如下&lt;/h2&gt;
+&lt;p&gt;GitBlog的目录结构如下所示：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.
+├── app
+│   ├── cache
+│   └── logs
+├── theme
+│   ├── default
+│   ├── quest
+│   └── simple
+├── sys
+├── img
+├── posts
+├── conf.yaml
+├── favicon.ico
+├── index.php
+├── LICENSE
+└── robots.txt&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;2.2版本变化&lt;/h2&gt;
+&lt;p&gt;从2.2版本开始，img和posts目录已经统一到blog目录。
+2.2之前的版本图片和markdown文件是分别放在img和posts目录，这样不太方便管理和备份。
+这个版本，我们统一放在blog目录中，图片推荐放在blog/img目录中，在markdown中使用相对路径引用图片。
+如果你不想修改以前markdown中的路径，你仍然可以使用根目录下的img文件夹中的图片，只是我们推荐以后的图片都放到blog目录中与markdown文件一起管理。 &lt;/p&gt;
+&lt;p&gt;2.2以后的目录会是这样：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.
+├── app
+│   ├── cache
+│   └── logs
+├── theme
+│   ├── default
+│   ├── quest
+│   └── simple
+├── sys
+├── blog
+│   └── img
+├── conf.yaml
+├── favicon.ico
+├── index.php
+├── LICENSE
+└── robots.txt&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;目录说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;app: CodeIgniter主程序目录，cache和logs分别是缓存和日志目录，请确保写的权限    &lt;/li&gt;
+&lt;li&gt;sys： CodeIgniter系统源码目录，一般不需要改这里面的任何东西  &lt;/li&gt;
+&lt;li&gt;theme： GitBlog主题目录，所有主题模板都放在这里    &lt;/li&gt;
+&lt;li&gt;posts: GitBlog存放markdown博客文件的目录，你写的博客都放这里  &lt;/li&gt;
+&lt;li&gt;img： 图片目录，你的markdown中引用的图片都放到这里，使用相对路径引用  &lt;/li&gt;
+&lt;li&gt;conf.yaml: GitBlog配置文件  &lt;/li&gt;
+&lt;li&gt;index.php: 入口php文件  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注意：2.2版本开始统一将markdown文件和图片文件放到blog目录中。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/struct.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/struct.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog配置</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-28
+title: GitBlog配置
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 这是Giblog的一个简单安装教程，如果你熟悉PHP或Web开发，这对你来说一定非常简单。本教程只针对Linux+Nginx环境，对于使用Apache的用户配置参考网上其他资料。
+--&gt;
+&lt;p&gt;GitBlog无需任何配置即可运行，但是为了突显你的博客特征。只需要对配置文件进行简单修改即可。GitBlog采用&lt;a href=&quot;http://www.yaml.org/&quot; title=&quot;yaml&quot;&gt;yaml&lt;/a&gt;格式的配置文件。&lt;/p&gt;
+&lt;h2&gt;配置文件conf.yaml&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#GitBlog配置文件，使用4个空格代替Tab
+---
+
+url: http://localhost:8080/
+title: Jimersy Lee&#039;s Blog
+subtitle: Just for fun
+theme: quest
+enableCache: false
+highlight: true
+mathjax: true
+katex: false
+disqus: jimersylee
+baiduAnalytics: 3f9957e676a9733fcd02eb9f0e5f9416
+keywords: Jimersy Lee,jimersylee,java,php,python,js,html,github
+description: &amp;gt;
+  这是Jimersy Lee的个人博客
+version: 2.3.2
+author:
+  name: jimersylee
+  email: jimersylee@gmail.com
+  github: jimersylee
+  weibo: Jimersy_Lee
+  avatar:
+blog:
+  recentSize: 5
+  pageSize: 10
+  pageBarSize: 5
+  allBlogsForPage: false
+text:
+  title: 介绍
+  intro: &amp;gt;
+    “What I cannot create, I do not understand.” – Richard Feynman
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;你可能需要修改的配置参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;url: 修改成你的域名，&lt;code&gt;http://yourdomain.com/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;title： 修改成你的博客标题  &lt;/li&gt;
+&lt;li&gt;subtitle： 修改成你的副标题  &lt;/li&gt;
+&lt;li&gt;disqus： GitBlog采用&lt;a href=&quot;https://disqus.com/&quot;&gt;disqus&lt;/a&gt;论框，你需要申请账号，并在这里填写你的site  &lt;/li&gt;
+&lt;li&gt;baiduAnalytics： GitBlog采用&lt;a href=&quot;http://tongji.baidu.com/&quot;&gt;百度统计&lt;/a&gt;，你需要申请百度统计账号，在这里填写你的统计Key  &lt;/li&gt;
+&lt;li&gt;author：修改为你个人的信息即可  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你不需要评论和统计功能，删除&lt;code&gt;disqus&lt;/code&gt;和&lt;code&gt;baiduAnalytics&lt;/code&gt;这两荐即可。其他信息，可根据浏览博客页面的效果进行修改调整。&lt;/p&gt;
+&lt;h2&gt;主题配置&lt;/h2&gt;
+&lt;p&gt;主题配置参数&lt;code&gt;theme&lt;/code&gt;，可选值即为public/theme目录下主题文件夹的名称，如&lt;code&gt;simple&lt;/code&gt;和&lt;code&gt;quest&lt;/code&gt;，可根据自己喜好选择配置。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:46:52</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/config.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/config.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>编写GitBlog博客</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-27
+title: 编写GitBlog博客
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 一篇GitBlog就是一个markdown文件，GitBlog使用解析markdown文件为html展示在网页上。所有的博客markdown文件必须放在posts文件夹里。后缀名只可以是xx.md或者xx.markdown。
+--&gt;
+&lt;p&gt;一篇GitBlog就是一个markdown文件，GitBlog使用解析markdown文件为html展示在网页上。所有的博客markdown文件必须放在&lt;code&gt;blog&lt;/code&gt;文件夹里。后缀名只可以是&lt;code&gt;xx.md&lt;/code&gt;或者&lt;code&gt;xx.markdown&lt;/code&gt;。&lt;/p&gt;
+&lt;h2&gt;发表一篇新博客&lt;/h2&gt;
+&lt;p&gt;在&lt;code&gt;blog&lt;/code&gt;里新建文件&lt;code&gt;helloworld.md&lt;/code&gt;，输入以下内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!--
+author: jockchou
+date: 2015-07-30
+title: Hello World!
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 你好！GitBlog
+--&amp;gt;
+
+你好！GitBlog
+
+GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，没有管理后台功能，更新博客只需要添加你写好的Markdown文件即可。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;文件里头部的注释用来定义博客的属性，这是一个规定的写法，必须放在文件的头部，每个属性独占一行。再次访问首页，就能看到这篇新发的博客了。如果没显示，请清除&lt;code&gt;writable/cache&lt;/code&gt;文件夹下的所有缓存文件试试看。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!--
+这里定义博客属性
+--&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;注意：markdown文件须采用utf8编码&lt;/em&gt;，如果出现乱码，请修改编码为utf8。&lt;/p&gt;
+&lt;h2&gt;博客属性定义&lt;/h2&gt;
+&lt;p&gt;GitBlog目前针对博客定义了以下属性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;author: 博客作者名称  &lt;/li&gt;
+&lt;li&gt;date: 博客时间，用于页面显示，通常来说你不需要填写这个字段，默认就是创建日期&lt;/li&gt;
+&lt;li&gt;title: 博客标题  &lt;/li&gt;
+&lt;li&gt;tags: 博客里的标签，多个用逗号或空格分隔  &lt;/li&gt;
+&lt;li&gt;category: 博客分类，多个用逗号或空格分隔  &lt;/li&gt;
+&lt;li&gt;status: 博客状态，&lt;code&gt;draft&lt;/code&gt;表示草稿，GitBlog解析时会忽略草稿；&lt;code&gt;publish&lt;/code&gt;表示发表状态，默认为publish  &lt;/li&gt;
+&lt;li&gt;summary: 博客摘要信息  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上所有信息都是独占一行，暂不支持写在多行。&lt;/p&gt;
+&lt;h2&gt;版本的新特性&lt;/h2&gt;
+&lt;p&gt;Gitblog新增了两个可选属性&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;images:博客的图片集，这里可以定义博客用到的图片的地址&lt;/li&gt;
+&lt;li&gt;head: 作者的头像地址&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上两个属性是可选的，主要是针对一些主题展示用的。&lt;/p&gt;
+&lt;p&gt;自动提取title，summary，images属性。Gitblog一个重要的功能，如果用户没有定义头部属性，Gitblog会自动解析博客内容，从中提取属性。提取第一个H1作为title，提取所有图片作为images，自动识别摘要信息summary。也就是说你可以不手动定义这三个字段，Gitblog会自动根据上述规则识别，不过还是推荐手动填写。&lt;/p&gt;
+&lt;h2&gt;markdown路径与URL对应关系&lt;/h2&gt;
+&lt;p&gt;GitBlog中&lt;code&gt;blog&lt;/code&gt;中的markdown文件可以放在子文件夹中。举个例子，假如你的&lt;code&gt;helloword.md&lt;/code&gt;文件目录如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;blog/hello/helloword.md&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;你在浏览器访问的对应地址应该是这样的：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://jockchou.gitblog.cn/blog/hello/helloworld.html&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;GitBlog对&lt;code&gt;blog&lt;/code&gt;中子文件夹的层级没有限制，但请尽量不要太深，一般2，3层就够了。如果你在本地编写博客，使用FTP工具上传markdown文件到&lt;code&gt;blog&lt;/code&gt;目录，如果你熟悉使用Git，SVN类似工具，用它们来发表博客也是极好的。markdown文件的路径和文件名标识了博客的唯一性，改变路径或修改文件名将会导致博客的评论信息丢失。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:49:41</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/edit.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/edit.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog评论，订阅，统计等功能</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-26
+title: GitBlog评论，订阅，统计等功能
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog支持评论，订阅，百度统计相关功能，这些功能可由conf.yaml配置开启或关闭，评论采用多说评论框，统计采用百度统计。
+--&gt;
+&lt;p&gt;GitBlog支持评论，订阅，百度统计相关功能，这些功能可由&lt;code&gt;conf.yaml&lt;/code&gt;配置开启或关闭，评论采用多说评论框，统计采用百度统计。&lt;/p&gt;
+&lt;h2&gt;disqus评论框&lt;/h2&gt;
+&lt;p&gt;GitBlog目前只支持disqus评论框，如果你希望你的博客有评论功能，你需要申请disqus账号来管理你的评论。disqus的官方地址是：&lt;a href=&quot;https://disqus.com/&quot;&gt;https://disqus.com/&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;在后台创建一个site,比如说叫jimersylee然后把site的名字填入conf.yaml&lt;/p&gt;
+&lt;p&gt;GitBlog中已经引入了代码，你要做的事情只是在&lt;code&gt;conf.yaml&lt;/code&gt;配置文中填上你的disqus=&lt;code&gt;jimersylee&lt;/code&gt;即可。例如我的博客：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;disqus: jimersylee  //填写你的多说账号&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;多说后台提供了评论的管理功能，你可以在后台配置你的评论样式，功能，以及审核，删除评论等操作。如果你不需要评论功能，删除&lt;code&gt;conf.yaml&lt;/code&gt;中的配置项即可。&lt;/p&gt;
+&lt;h2&gt;百度统计&lt;/h2&gt;
+&lt;p&gt;同时，对于博客的PV统计，你需要申请百度统计账号。你也不需要手动获取统计代码。只需要填写你的统计代码中的Key值就行了。例如我的百度统计代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement(&quot;script&quot;);
+  hm.src = &quot;//hm.baidu.com/hm.js?732acc76ff6bd41343951a67cbfafe34&quot;;
+  var s = document.getElementsByTagName(&quot;script&quot;)[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;只需要将&lt;code&gt;732acc76ff6bd41343951a67cbfafe34&lt;/code&gt;配置到&lt;code&gt;conf.yaml&lt;/code&gt;中即可。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;baiduAnalytics  : 732acc76ff6bd41343951a67cbfafe34  #百度统计&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;代码高亮&lt;/h2&gt;
+&lt;p&gt;GitBlog的代码高亮功能采用&lt;a href=&quot;https://highlightjs.org/&quot;&gt;highlight.js&lt;/a&gt;。它能自动识别代码中的语言类型。默认是开启代码高亮功能的。关闭此功能配置如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;highlight: off&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;数学公式&lt;/h2&gt;
+&lt;p&gt;GitBlog支持&lt;a href=&quot;https://en.wikipedia.org/wiki/LaTeX&quot;&gt;LaTeX&lt;/a&gt;数据公式，采用的是&lt;a href=&quot;http://www.mathjax.org/&quot;&gt;MathJax.js&lt;/a&gt;。此功能默认是关闭的，开启的配置如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mathjax: on&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;RSS订阅&lt;/h2&gt;
+&lt;p&gt;GitBlog支持RSS订阅，订阅的xml文件地址是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://jockchou.gitblog.cn/feed.xml&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;请替换为你自己的域名，即网站根目录下的feed.xml文件。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:43:00</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/other-func.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/other-func.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog的缓存机制</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-25
+title: GitBlog的缓存机制
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 由于GitBlog没有数据库，是依靠解析posts文件夹中的markdown文件来展示表客数据的。通常我们写好一篇博客以后，对其进行修改的频率并不高。GitBlog没必要每次访问页面时，都去解析markdown文件。基于这个理由，GitBlog对数据进行了缓存，GitBlog的缓存有三个层面的实现。
+--&gt;
+&lt;p&gt;由于GitBlog没有数据库，是依靠解析&lt;code&gt;posts&lt;/code&gt;文件夹中的markdown文件来展示表客数据的。通常我们写好一篇博客以后，对其进行修改的频率并不高。GitBlog没必要每次访问页面时，都去解析markdown文件。基于这个理由，GitBlog对数据进行了缓存，GitBlog的缓存有三个层面的实现。&lt;/p&gt;
+&lt;h2&gt;三层缓存机制&lt;/h2&gt;
+&lt;p&gt;三层缓存机制由上至下依次是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTML页面缓存&lt;/li&gt;
+&lt;li&gt;Twig模板缓存&lt;/li&gt;
+&lt;li&gt;PHP数据缓存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所有的缓存数据都放在&lt;code&gt;writable/cache&lt;/code&gt;目录中，所以要保证程序有写这个目录的权限，缓存才能生效。下面我们由下至上依次来说明这三层缓存。&lt;/p&gt;
+&lt;h2&gt;PHP数据缓存&lt;/h2&gt;
+&lt;p&gt;第一次访问博客时，PHP程序会做解析&lt;code&gt;posts&lt;/code&gt;下的markdown博客文件。解析完后全部缓存起来。缓存的文件有：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;all_blog.gb     -&amp;gt;所有的博客数据
+all_tag.gb      -&amp;gt;所有的博客标签
+all_category.gb -&amp;gt;所有的分类信息
+all_archive.gb  -&amp;gt;所有的归档月份&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;些外，按分类，标签，归档访问博客列表时也会对应生成相应的缓存，并且按ID访问分类，标签，博客时也会生成对应的缓存。 这是最底层的缓存，缓存的文件名后缀为&lt;code&gt;.gb&lt;/code&gt;。&lt;/p&gt;
+&lt;h2&gt;Twig模板缓存&lt;/h2&gt;
+&lt;p&gt;GitBlog采用&lt;a href=&quot;http://twig.sensiolabs.org/&quot;&gt;Twig&lt;/a&gt;模板引擎，Twig是一个轻量，高效，安全的PHP模板引擎。Twig会将html模板块转换成PHP类文件缓存起来。这些模板层级的缓存，主要是针对重复载入拼接模板的优化。&lt;/p&gt;
+&lt;h2&gt;HTML页面缓存&lt;/h2&gt;
+&lt;p&gt;这是最上层的缓存机制，GitBlog会将访问过的每一个页面都缓存为一个html文件。下次访问时，直接读取这个html文件。&lt;/p&gt;
+&lt;p&gt;当你对GitBlog作了改动后，发现没有生效，可以先尝试清除&lt;code&gt;writable/cache&lt;/code&gt;下的所有缓存文件。比如你上传了新的markdown，希望马上能访问看到，可以这样做。&lt;/p&gt;
+&lt;h2&gt;2.1新特性&lt;/h2&gt;
+&lt;p&gt;Gitblog从2.1版本开始，缓存机制在&lt;code&gt;development&lt;/code&gt;模式下是不会生成缓存文件的。如果你需要暂时的连续改写markdown文件，可以先切到&lt;code&gt;development&lt;/code&gt;模式，避免不停清缓存的麻烦。&lt;/p&gt;
+&lt;p&gt;修改Gitblog根目录下的index.php文件第一行PHP代码，将ENVIRONMENT参数的值修改为&lt;code&gt;development&lt;/code&gt;，如果博客已经稳定发表，强烈建议改成&lt;code&gt;production&lt;/code&gt;模式。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;define(&#039;ENVIRONMENT&#039;, isset($_SERVER[&#039;CI_ENV&#039;]) ? $_SERVER[&#039;CI_ENV&#039;] : &#039;production&#039;);&lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/cache.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/cache.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog全站静态导出</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-24
+title: GitBlog全站静态导出
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog支持把整个博客网站导出为静态HTML文件，这样导出整个网站后，可以把它上传到网站空间，以静态形式访问，导出的后的网站结构和运行在PHP环境中一样。
+--&gt;
+&lt;p&gt;GitBlog支持把整个博客网站导出为静态HTML文件，这样导出整个网站后，可以把它上传到网站空间，以静态形式访问，导出的后的网站结构和运行在PHP环境中一样。&lt;/p&gt;
+&lt;p&gt;你可以使用以下命令静态导出网站：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;php public/index.php home exportSite&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以上命令请换成你的网站路径。成功导出后，会在GitBlog目录下生成一个&lt;code&gt;_site&lt;/code&gt;的文件夹，所有导出的静态资源都在这里，你可以随意复制它布署到你的环境中。&lt;/p&gt;
+&lt;p&gt;导出前可清除&lt;code&gt;cache&lt;/code&gt;目录中的缓存，以便导出最新的资源。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:50:29</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/export.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/export.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>GitBlog主题制作</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-23
+title: GitBlog主题制作
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 此文档编写中...如果你想制作主题可以先参考源码包中现有主题，GitBlog主题模板采用[Twig](http://twig.sensiolabs.org/)引擎，你可以通过官方文档学习模板语法
+或者你可以加入GitBlog官方的QQ群交流
+--&gt;
+&lt;p&gt;此文档编写中...&lt;/p&gt;
+&lt;p&gt;如果你想制作主题可以先参考源码包中现有主题&lt;/p&gt;
+&lt;p&gt;主题模板采用&lt;a href=&quot;http://twig.sensiolabs.org/&quot;&gt;Twig&lt;/a&gt;模板引擎，你可以通过官方文档学习Twig模板语法&lt;/p&gt;
+&lt;p&gt;或者你可以加入GitBlog官方的QQ群交流&lt;/p&gt;
+&lt;p&gt;QQ群:&lt;code&gt;84692078&lt;/code&gt;&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/theme.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/theme.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>在Apache上运行GitBlog</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-22
+title: 在Apache上运行GitBlog
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog在Aapche上运行需要开启Aapche Rewrite模块以支持GitBlog的伪静态URL。并且要配置.htaccess文件可用，然后在.htaccess文件中配置Rewriter规则。
+--&gt;
+&lt;p&gt;GitBlog在Aapche上运行需要开启Aapche Rewrite模块用以支持GitBlog的伪静态URL。并且要配置&lt;code&gt;.htaccess&lt;/code&gt;文件可用，然后在&lt;code&gt;.htaccess&lt;/code&gt;文件中配置Rewriter规则。&lt;/p&gt;
+&lt;h2&gt;打开Aapache Rewrite模块&lt;/h2&gt;
+&lt;p&gt;打开&lt;code&gt;httpd.conf&lt;/code&gt;文件，解除&lt;code&gt;rewrite_module&lt;/code&gt;模板前的的注释&lt;code&gt;#&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;LoadModule rewrite_module modules/mod_rewrite.so&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;启用&lt;code&gt;.htaccess&lt;/code&gt;，在虚拟机配置项中：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;AllowOverride None #修改为： AllowOverride All&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;创建虚拟目录&lt;/h2&gt;
+&lt;p&gt;上传Gitbog安装包，解压到服务器上的目录，例如解压的目录为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/data/gitblog&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;配置apache虚拟主机目录到此文件夹，即&lt;code&gt;/data/gitblog/&lt;/code&gt;目录此时为你博客网站的根目录。如果连虚拟目录都不会配置的请麻烦你去读一读apache的手册或者去google上搜索一下。&lt;/p&gt;
+&lt;h2&gt;配置Rewrite规则&lt;/h2&gt;
+&lt;p&gt;在GitBlog根目录下创建&lt;code&gt;.htaccess&lt;/code&gt;文件，输入以下内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteCond $1 !^(index\.php|img|robots\.txt)
+RewriteRule ^(.*)$ /index.php/$1 [L]&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;权限问题&lt;/h2&gt;
+&lt;p&gt;由于GitBlog的缓存机制需要写&lt;code&gt;writable/cache&lt;/code&gt;目录，必要时请查看并修改这个目录的权限，以确保你的PHP拥有写这个目录的权限。最粗鲁的方式就是把整个GitBlog目录的权限都修改成你的apache运行账户的权限。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;chown -R apache:apache ./gitblog&lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/apache.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/apache.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>在Nginx上运行GitBlog</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-22
+title: 在Nginx上运行GitBlog
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 如果你自己拥有服务器或者云平台提供的云主机，我推荐你使用Linux+[Nginx](http://nginx.org/)来运行GitBlog，如果你目前只有Apache环境也是可以的。
+--&gt;
+&lt;p&gt;如果你自己拥有服务器或者云平台提供的云主机，我推荐你使用Linux+&lt;a href=&quot;http://nginx.org/&quot;&gt;Nginx&lt;/a&gt;来运行GitBlog，如果你目前只有Apache环境也是可以的。&lt;/p&gt;
+&lt;h2&gt;域名解析&lt;/h2&gt;
+&lt;p&gt;将你准备好的域名解析到你的主机IP，推荐使用&lt;a href=&quot;https://www.dnspod.cn/&quot;&gt;dnspod&lt;/a&gt;来管理和监控你的域名，具体的使用方法参考dnspod官方说明文档，非常简单。&lt;/p&gt;
+&lt;h2&gt;Nginx+PHP运行环境&lt;/h2&gt;
+&lt;p&gt;首先安装好你的Nginx和PHP环境，PHP版本要求5.3以上。如果你没有安装过，可Google搜索相关教程，也可以参照Nginx和PHP官方的文档。这是第一步，有一个正常的Nginx + PHP的运行环境。&lt;/p&gt;
+&lt;h2&gt;配置Nginx&lt;/h2&gt;
+&lt;p&gt;nginx可参考如下配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;server {
+        listen       80;
+        server_name  jockchou.gitblog.cn;
+        root         /data/vhosts/jockchou.gitblog.cn;
+        index        index.html index.htm index.php;
+
+        location ~ \.(jpg|png|gif|js|css|swf|flv|ico)$ {
+                 expires 12h;
+        }
+
+        location / {
+                if (!-e $request_filename) {
+                    rewrite ^(.*)$ /index.php?$1 last ;
+                    break;
+                }
+        }
+
+        location ~* ^/(doc|logs|app|sys)/ {
+                return 403;
+        }
+
+        location ~ .*\.(php|php5)?$
+        {
+                fastcgi_connect_timeout 300;
+                fastcgi_send_timeout 300;
+                fastcgi_read_timeout 300;
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;将以上配置中的server_name和root改成你自己的，fastcgi_pass配成你的CGI进程端口。&lt;/p&gt;
+&lt;h2&gt;权限配置&lt;/h2&gt;
+&lt;p&gt;由于GitBlog的缓存机制需要写&lt;code&gt;writable/cache&lt;/code&gt;目录，必要时请查看并修改这个目录的权限，以确保你的PHP拥有写这个目录的权限。通常你只需要将此目录的所属者和组修改成CGI的运行账户。&lt;/p&gt;
+&lt;h2&gt;运行&lt;/h2&gt;
+&lt;p&gt;以上配置好以后，启动你的Nginx和CGI服务，上传GitBlog源代码到网站目录，通过浏览器访问解析到本机的域名观察页面效果。如果页面没有正常显示，通过错误码来检查你的CGI和Nginx配置。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/nginx.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/nginx.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>在新浪SAE上运行GitBlog</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-21
+title: 在新浪SAE上运行GitBlog
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: GitBlog支持在新浪SAE云平台上运行。SAE是Sina App Engine的简称，是新浪研发中心推出的国内首个公有云计算平台，支持PHP，MySQL，Memcached，Mail，TaskQueue，RDC（关系型数据库集群）等服务。SAE通过实名认证及开发者认证，每个月送大量云豆，对于一般的博客站点云豆完全够用，也就是说用SAE搭建博客完全免费，不需要支付费用。
+--&gt;
+&lt;p&gt;GitBlog支持在新浪&lt;a href=&quot;http://sae.sina.com.cn&quot;&gt;SAE&lt;/a&gt;云平台上运行。SAE是Sina App Engine的简称，是新浪研发中心推出的国内首个公有云计算平台，支持PHP，MySQL，Memcached，Mail，TaskQueue，RDC（关系型数据库集群）等服务。SAE通过实名认证及开发者认证，每个月送大量云豆，对于一般的博客站点云豆完全够用，也就是说用SAE搭建博客完全免费，不需要支付费用。&lt;/p&gt;
+&lt;h2&gt;布署GitBlog项目到SAE&lt;/h2&gt;
+&lt;p&gt;首先要申请SAE账号，在SAE管理后台创建一个PHP(5.3版本以上)应用，创建应用完成后，参照代码管理说明文档，通过SVN提交GitBlog源码到应用在SAE的SVN仓库地址即可。例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://svn.sinaapp.com/gitblogdoc/&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;SAE的配置&lt;/h2&gt;
+&lt;p&gt;在上传代码到SAE前，需要配置一下。SAE的配置文件为&lt;code&gt;config.yaml&lt;/code&gt;，把它放到网站根目录下，配置rewrite用以支持GitBlog伪静态。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;name: gitblogdoc
+version: 1
+handle:
+    - rewrite: if(!is_dir() &amp;amp;&amp;amp; !is_file() &amp;amp;&amp;amp; path ~ &quot;/&quot;) goto &quot;/index.php?%{QUERY_STRING}&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;关于SAE的特别说明&lt;/h2&gt;
+&lt;p&gt;由于SAE禁止PHP访问本地IO，所以GitBlog的缓存机制在SAE上是不支持的，不过没关系，没有缓存GitBlog照样能运行良好，只是博客数量太多了页面会稍微慢一点，后面的版本会考虑使用的SAE的Storage来支持缓存。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/sae.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/sae.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>使用GitBlog和Github Pages搭建博客</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-20
+title: 使用GitBlog和Github Pages搭建博客
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 如果你没有主机，也不想使用SAE，只有Github账号，你想用GitBlog搭建自己的博客系统也是可以简单地做到的，[Github pages](https://pages.github.com/)允许你基于Github分库建立一个站点。
+--&gt;
+&lt;h2&gt;创建Github Pages仓库&lt;/h2&gt;
+&lt;p&gt;你首先要创建一个新的Github仓库，这个仓库的名字必须为&lt;code&gt;username.github.io&lt;/code&gt;，username为你的github账户名，必须一致。具体的步骤请参照这里&lt;a href=&quot;https://pages.github.com/&quot;&gt;https://pages.github.com/&lt;/a&gt;。&lt;/p&gt;
+&lt;h2&gt;导出GitBlog静态网站&lt;/h2&gt;
+&lt;p&gt;Github pages不支持PHP程序运行，所以需要导出静态页面，将导出的&lt;code&gt;_site&lt;/code&gt;目录下的所有文件复制到上一步创建的本地仓库，把仓库同步到Github上面。这样就好了，你可以通过域名username.github.io来访问刚才同步的Github pages了。&lt;/p&gt;
+&lt;h2&gt;绑定域名到Github pages&lt;/h2&gt;
+&lt;p&gt;你也可以通过绑定自己的域名到Github pages，使用自己的域名来访问Github pages。在你的仓库根目录下创建一个&lt;code&gt;CNAME&lt;/code&gt;文件，文件中输出你的域名，例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jockchou.com&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;同步这个CNAME文件到Github仓库。然后就是要把你的域名解析到Github pages了。如果使用的是顶级域名解析A纪录，如果是子域名解析CNAME纪录，解析的纪录值是:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;103.245.222.133&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个IP可能Github官方会变，请注意修改。详细的配置方法参考&lt;a href=&quot;https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;以上配置完成后，等域名解析生效后，就可以使用自己的域名访问了。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/github-pages.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/github-pages.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>Gitblog升级</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-18
+title: Gitblog升级
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 使用Gitblog老版本的用户可以在官网或者Gitbub上下载最新的Gitblog包进行升级，本文针对Gitblog升级的一些注意事项进行说明。
+--&gt;
+&lt;p&gt;使用Gitblog老版本的用户可以在官网或者Gitbub上下载最新的Gitblog包进行升级，本文针对Gitblog升级的一些注意事项进行说明。&lt;/p&gt;
+&lt;h2&gt;备份&lt;/h2&gt;
+&lt;p&gt;在升级之前，请先备份好原来的Gitblog资源。这里包括所有的博客文件，即&lt;code&gt;posts&lt;/code&gt;文件夹下面的所有markdown文件，这是最重要的，请务必备份好你的博客数据，以免错误操作导致博客丢失！以下列出了需要做好备份的内容：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;conf.yaml&lt;/li&gt;
+&lt;li&gt;posts&lt;/li&gt;
+&lt;li&gt;img&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;备份好你的配置文件，博客数据和相关的图片文件，以免丢失。&lt;/p&gt;
+&lt;h2&gt;覆盖安装Gitblog&lt;/h2&gt;
+&lt;p&gt;下载最新的Gitblog包，解压覆盖老的Gitblog目录，注意这时候你的配置文件也被覆盖了，你需要把之前的备份的配置文件再还原过来。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/update.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/update.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>从wordpress导入</title>
+            <description>
+            &lt;!--
+author: jockchou
+date: 2015-07-17
+title: 从wordpress导入
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: Gitblog从2.1版本开始支持从wordpress导入到Gitblog的功能，方便wordpress使用者快速转移博客到Gitblog。
+--&gt;
+&lt;p&gt;Gitblog从2.1版本开始支持从wordpress导入到Gitblog的功能，方便wordpress使用者快速转移博客到Gitblog。&lt;/p&gt;
+&lt;h2&gt;从wordpress导出xml&lt;/h2&gt;
+&lt;p&gt;第一步是要从wordpress管理后台使用自带工具导出wordpress.xml。worldpress管理后台，工具-》导出，选择文章项，下载导出的文件。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://pingodata.qiniudn.com/wordpress2gitblog.png&quot; alt=&quot;wordpress.xml&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;将下载下来的xml文件重命名为&lt;code&gt;wordpress.xml&lt;/code&gt;并复制到Gitblog根目录。&lt;/p&gt;
+&lt;h2&gt;执行导入命令&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;php /data/vhosts/jockchou.gitblog.cn/index.php wp2gb&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也就是执行gitblog的wp2gb函数，成功后，会在&lt;code&gt;posts/wp&lt;/code&gt;目录下生成导入的博客文件。&lt;/p&gt;            </description>
+            <pubDate>2022-08-04 04:18:18</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/wordpress.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/wordpress.html</guid>
+                                               <category>GitBlog</category>
+                                    </item>
+                <item>
+            <title>Hello World</title>
+            <description>
+            &lt;!--
+author: Jimersy Lee
+head: 
+date: 2014-01-01
+title: Hello World
+tags: Blog
+images: 
+category: 
+status: publish
+summary: 本人精通各种编程语言              的hello world!
+--&gt;
+&lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本人精通各种语言              的hello world!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;echo &quot;hello world&quot;;
+printf &quot;hello world&quot;;
+System.out.println(&quot;hello world&quot;);
+print(&quot;hello world&quot;)
+alert(&quot;hello world&quot;);
+std::cout &amp;lt;&amp;lt; &quot;hello world&quot; &amp;lt;&amp;lt; std::endl;
+Console.WriteLine(&quot;hello world&quot;); 
+&lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2022-08-04 00:49:53</pubDate>
+            <link>http://localhost:8080/http://localhost:8080/blog/HelloWorld.html</link>
+            <guid isPermaLink="true">http://localhost:8080/http://localhost:8080/blog/HelloWorld.html</guid>
+                    </item>
+            </channel>
+</rss>
+<!-- DEBUG-VIEW ENDED 1 APPPATH/Views/feed.php -->

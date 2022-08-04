@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>GitBlog的缓存机制|Jimersy Lee's Blog</title>
+	<meta name="keywords" content="GitBlog,Jimersy Lee's Blog">
+	<meta name="description" content="由于GitBlog没有数据库，是依靠解析posts文件夹中的markdown文件来展示表客数据的。通常我们写好一篇博客以后，对其进行修改的频率并不高。GitBlog没必要每次访问页面时，都去解析markdown文件。基于这个理由，GitBlog对数据进行了缓存，GitBlog的缓">
+	
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,latin-ext">
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/style.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://localhost:8080/theme/quest/css/customizer.css?ver=2.3.2" type="text/css" media="all" />
+	<link rel="alternate" type="application/rss+xml" title="Jimersy Lee's Blog" href="http://localhost:8080/feed.xml" />
+	
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?3f9957e676a9733fcd02eb9f0e5f9416";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	</head>
+
+<body class="home blog wide">
+	<div id="page" class="hfeed site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		    <header id="masthead" class="main-header" role="banner">
+<div class="container">
+	<div class="row">
+		<div class="site-branding col-md-4">
+			<h1 class="site-title"><a href="http://localhost:8080/" rel="home">Jimersy Lee's Blog</a></h1>
+				<span class="site-description">Just for fun</span>
+		</div>
+		<!-- .site-branding -->
+	</div>
+</div>
+</header>		    <div id="content">
+	<div class="quest-row site-content">
+		<div class="container">
+			<div class="row">
+				<div id="primary" class="content-area single col-md-9">
+					<div id="main" class="site-main" role="main">
+						<article class="post hentry">
+	<header class="entry-header">
+	<h1 class="post-title"><a href="http://localhost:8080/blog/cache.html" rel="bookmark">GitBlog的缓存机制 </a></h1>
+	<div class="entry-meta">
+		<time class="post-date"><i class="fa fa-clock-o"></i>2015-07-25</time>
+				<span class="seperator">/</span>
+	    <span><i class="fa fa-user"></i> jockchou</span>
+	    	</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+	<div class="entry-content">
+		<!--
+author: jockchou
+date: 2015-07-25
+title: GitBlog的缓存机制
+tags: GitBlog
+category: GitBlog
+status: publish
+summary: 由于GitBlog没有数据库，是依靠解析posts文件夹中的markdown文件来展示表客数据的。通常我们写好一篇博客以后，对其进行修改的频率并不高。GitBlog没必要每次访问页面时，都去解析markdown文件。基于这个理由，GitBlog对数据进行了缓存，GitBlog的缓存有三个层面的实现。
+-->
+<p>由于GitBlog没有数据库，是依靠解析<code>posts</code>文件夹中的markdown文件来展示表客数据的。通常我们写好一篇博客以后，对其进行修改的频率并不高。GitBlog没必要每次访问页面时，都去解析markdown文件。基于这个理由，GitBlog对数据进行了缓存，GitBlog的缓存有三个层面的实现。</p>
+<h2>三层缓存机制</h2>
+<p>三层缓存机制由上至下依次是：</p>
+<ul>
+<li>HTML页面缓存</li>
+<li>Twig模板缓存</li>
+<li>PHP数据缓存</li>
+</ul>
+<p>所有的缓存数据都放在<code>writable/cache</code>目录中，所以要保证程序有写这个目录的权限，缓存才能生效。下面我们由下至上依次来说明这三层缓存。</p>
+<h2>PHP数据缓存</h2>
+<p>第一次访问博客时，PHP程序会做解析<code>posts</code>下的markdown博客文件。解析完后全部缓存起来。缓存的文件有：</p>
+<pre><code>all_blog.gb     -&gt;所有的博客数据
+all_tag.gb      -&gt;所有的博客标签
+all_category.gb -&gt;所有的分类信息
+all_archive.gb  -&gt;所有的归档月份</code></pre>
+<p>些外，按分类，标签，归档访问博客列表时也会对应生成相应的缓存，并且按ID访问分类，标签，博客时也会生成对应的缓存。 这是最底层的缓存，缓存的文件名后缀为<code>.gb</code>。</p>
+<h2>Twig模板缓存</h2>
+<p>GitBlog采用<a href="http://twig.sensiolabs.org/">Twig</a>模板引擎，Twig是一个轻量，高效，安全的PHP模板引擎。Twig会将html模板块转换成PHP类文件缓存起来。这些模板层级的缓存，主要是针对重复载入拼接模板的优化。</p>
+<h2>HTML页面缓存</h2>
+<p>这是最上层的缓存机制，GitBlog会将访问过的每一个页面都缓存为一个html文件。下次访问时，直接读取这个html文件。</p>
+<p>当你对GitBlog作了改动后，发现没有生效，可以先尝试清除<code>writable/cache</code>下的所有缓存文件。比如你上传了新的markdown，希望马上能访问看到，可以这样做。</p>
+<h2>2.1新特性</h2>
+<p>Gitblog从2.1版本开始，缓存机制在<code>development</code>模式下是不会生成缓存文件的。如果你需要暂时的连续改写markdown文件，可以先切到<code>development</code>模式，避免不停清缓存的麻烦。</p>
+<p>修改Gitblog根目录下的index.php文件第一行PHP代码，将ENVIRONMENT参数的值修改为<code>development</code>，如果博客已经稳定发表，强烈建议改成<code>production</code>模式。</p>
+<pre><code>define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');</code></pre>
+	</div><!-- .entry-content -->	<footer class="entry-footer">
+		<ul class="post-categories">
+          
+          <li><a href="http://localhost:8080/category/GitBlog.html" rel="category">GitBlog</a></li>
+        	</ul>
+		
+		<ul class="post-tags">
+                   <li><a href="http://localhost:8080/tags/GitBlog.html" rel="tag">GitBlog</a></li>
+        	</ul>
+		
+	</footer><!-- .entry-footer --></article><!-- #post-## -->
+            			<div id="comments" class="clearfix">
+	<div id="respond" class="comment-respond">
+		<div id="disqus_thread"></div>
+		<script>
+		   var disqus_config = function () {
+		   this.page.url = location.href;
+		   this.page.identifier = '65c5194107c0e8cae7cbec4b4135fd7d';
+		   };
+		(function() {
+			var d = document, s = d.createElement('script');
+			s.src = '//jimersylee.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	</div><!-- #respond -->
+</div>
+					</div>
+					<!-- #main -->
+				</div>
+				<!-- #primary -->
+				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
+	<aside class="widget widget_search sidebar-widget clearfix">
+	<h3 class="widget-title">搜索</h3>
+	<form class="search" action="http://localhost:8080/search" method="get">
+		<fieldset>
+			<div class="text">
+				<input name="keyword" id="keyword" type="text" placeholder="Search ..."/>
+				<button class="fa fa-search">Search</button>
+			</div>
+		</fieldset>
+	</form>
+</aside>
+	<aside class="widget widget_categories sidebar-widget clearfix">
+	<h3 class="widget-title">分类目录</h3>
+	<ul>
+		        <li class="cat-item"><a href="http://localhost:8080/category/GitBlog.html" >GitBlog</a></li>
+        	</ul>
+</aside>
+	<aside class="widget widget_archive sidebar-widget clearfix">
+	<h3 class="widget-title">文章归档</h3>
+	<ul>
+		<li><a href="http://localhost:8080/archive/201507.html">2015-07</a></li>
+		<li><a href="http://localhost:8080/archive/201401.html">2014-01</a></li>
+		</ul>
+</aside>	<aside class="widget widget_recent_entries sidebar-widget clearfix">
+	<h3 class="widget-title">近期文章</h3>
+	<ul>
+	    <li><a href="http://localhost:8080/blog/install.html">GitBlog安装</a></li>
+        <li><a href="http://localhost:8080/blog/struct.html">GitBlog目录结构</a></li>
+        <li><a href="http://localhost:8080/blog/config.html">GitBlog配置</a></li>
+        <li><a href="http://localhost:8080/blog/edit.html">编写GitBlog博客</a></li>
+        <li><a href="http://localhost:8080/blog/other-func.html">GitBlog评论，订阅，统计等功能</a></li>
+    	</ul>
+</aside>
+	<aside class="widget widget_tag_cloud sidebar-widget clearfix">
+	<h3 class="widget-title">标签</h3>
+	<div class="tagcloud">
+		<a href="http://localhost:8080/tags/GitBlog.html"  title="GitBlog" >GitBlog</a>
+		<a href="http://localhost:8080/tags/Blog.html"  title="Blog" >Blog</a>
+		</div>
+</aside>
+	<aside class="widget widget_text sidebar-widget clearfix">
+	<h3 class="widget-title">介绍</h3>
+	<div class="textwidget">
+		<p>“What I cannot create, I do not understand.” – Richard Feynman</p>
+	</div>
+</aside>
+</div><!-- #secondary -->
+			</div>
+			<!-- .row -->
+		</div>
+		<!-- .container -->
+	</div>
+	<!-- .quest-row -->
+</div>
+		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 copyright-text">
+                <a href="https://github.com/jimersylee">Made with Love</a>
+            </div>
+            <div class="col-md-6 social-icon-container clearfix">
+                <ul>
+                    <li>
+                        <a href="https://github.com/jimersylee">Github</a>
+                        <a href="https://resume.jimersylee.com">简历</a>
+                        <a href="https://www.jimersylee.com">个人主页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</footer>
+	</div><!-- #page -->
+	<a href="#0" class="cd-top"><i class="fa fa-angle-up"></i></a>
+
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/modernizr/modernizr.custom.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery.js?ver=1.11.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/bootstrap/js/bootstrap.min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/wow/wow.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/plugins/colorbox/jquery.colorbox-min.js?ver=2.3.2"></script>
+<script type="text/javascript" src="http://localhost:8080/theme/quest/assets/js/quest.js?ver=2.3.2"></script>
+	
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/8.6/styles/default.min.css">
+<script src="//cdn.bootcss.com/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
