@@ -561,12 +561,11 @@ class Markdown
             $ctime = date("Y-m-d H:i:s", $fileProp['date']);
             $serverPath = str_replace("\\", "/", $fileProp['server_path']);
             $relativePath = str_replace($postPath, "", $serverPath);
-
+            $fileName=basename($relativePath,".md");
             $sitePath = $this->changeFileExt($relativePath);
             $siteURL = "blog/" . $this->changeFileExt($relativePath);
-
             $siteURL = $this->urlencodeURI($siteURL);
-            $blogId = md5($siteURL);
+            $blogId = md5($fileName);
             $siteURL = $this->baseurl . $siteURL;
 
             $blog = array(
@@ -614,6 +613,7 @@ class Markdown
 
         $this->sortYearMonths();
 
+        //dump($this->blogs);exit;
         //缓存全局数据
         $this->globalDataCacheWrite();
     }

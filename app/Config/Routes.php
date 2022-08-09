@@ -49,7 +49,7 @@ $route['tags/(:any).html'] 					= 'Home::tags/$1';
 $route['archive/(:any)/page/(:num).html'] 	= 'Home::archive/$1/$2';
 $route['archive/(:num).html']				= 'Home::archive/$1';
 
-$route['blog/(.+).html'] 					= 'Home::blog';
+$route['blog/(:any).html'] 					= 'Home::blog/$1';
 
 $route['search'] 							= 'Home::search';
 

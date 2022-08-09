@@ -476,11 +476,7 @@ class Home extends BaseController
         if ($this->loadOutCache()) {
             return $this->response->getBody();
         }
-
-        if (!$blogId) {
-            $blogId = md5(uri_string());
-        }
-
+        $blogId = md5($blogId);
         $blog = $this->markdown->getBlogById($blogId);
 
         if ($blog == null) {
